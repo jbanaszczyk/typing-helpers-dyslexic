@@ -5,12 +5,10 @@ SetKeyDelay 0, 10
 ;;;;;;;;;;;;;; space fixes
 
 FixEarlySpace() {
-    SendInput "{Alt up}{Esc}"
     SendInput "^{Left}{Backspace}{Right}{Space}^{Right}"
 }
 
 FixLateSpace() {
-    SendInput "{Alt up}{Esc}"
     SendInput "^{Left}{Backspace}{Left}{Space}^{Right}"
 }
 
