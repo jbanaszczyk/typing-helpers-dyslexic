@@ -2,50 +2,17 @@
 #Requires AutoHotkey v2.0
 SetKeyDelay 0, 10
 
-;;;;;;;;;;;;;; space fixes
+; AHK typo correction only when portable Espanso (`Espanso/espansod.exe`) is absent; otherwise Espanso corrects
+ahkTypos := !FileExist(A_ScriptDir "/Espanso/espansod.exe")
 
-FixEarlySpace() {
-    SendInput "^{Left}{Backspace}{Right}{Space}^{Right}"
-}
+#HotIf ahkTypos
+#Include "*i windows/auto.ahk"
+#Include "windows/typo_pl.ahk"
+#Include "windows/typo_en.ahk"
+#Include "windows/spelling.ahk"
+#Include "*i windows/secrets.ahk"
+#HotIf
 
-FixLateSpace() {
-    SendInput "^{Left}{Backspace}{Left}{Space}^{Right}"
-}
-
-;;;;;;;;;;;;;; transposition fix
-
-SwapCharsAroundCursor() {
-    oldClip := ClipboardAll()
-    A_Clipboard := ""
-
-    ; copy left char, then delete it
-    SendInput "+{Left}"
-    Sleep 30
-    SendInput "^x"
-    Sleep 30
-    if !ClipWait(0.3) {
-        A_Clipboard := oldClip
-        return
-    }
-
-    SendInput "{Right}"
-    Sleep 30
-    SendInput "^v"
-    Sleep 30
-    SendInput "{Left}"
-
-    Sleep 30
-    A_Clipboard := oldClip
-}
-
-^#Right::FixEarlySpace()
-^#Left::FixLateSpace()
-^#Up::SwapCharsAroundCursor()
-^#Down::SwapCharsAroundCursor()
-
-;;;;;;;;;;;;;;
-
-#Include "auto.ahk"
-#Include "secrets.ahk"
-#Include "make_dictionary.ahk"
-#Include "messenger.ahk"
+#Include "windows/sequence_fixes.ahk"
+#Include "windows/make_dictionary.ahk"
+#Include "windows/messenger.ahk"

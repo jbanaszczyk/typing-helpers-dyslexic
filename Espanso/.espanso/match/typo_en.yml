@@ -1,0 +1,70 @@
+matches:
+  - trigger: "bracnh"
+    replace: "branch"
+    word: true
+    propagate_case: true
+
+  - trigger: "dc1"
+    replace: "cdx"
+    word: true
+    propagate_case: true
+
+  - trigger: "expalin"
+    replace: "explain"
+    word: true
+    propagate_case: true
+
+  - trigger: "froim"
+    replace: "from"
+    word: true
+    propagate_case: true
+
+  - trigger: "invloved"
+    replace: "involved"
+    word: true
+    propagate_case: true
+
+  - trigger: "metdata"
+    replace: "metadata"
+    word: true
+    propagate_case: true
+
+  - trigger: "retrive"
+    replace: "retrieve"
+    word: true
+    propagate_case: true
+
+  - trigger: "shold"
+    replace: "should"
+    word: true
+    propagate_case: true
+
+  - trigger: "szie"
+    replace: "size"
+    word: true
+    propagate_case: true
+
+  - trigger: "solutino"
+    replace: "solution"
+    word: true
+    propagate_case: true
+
+  - trigger: "starnge"
+    replace: "strange"
+    word: true
+    propagate_case: true
+
+  - trigger: "taht"
+    replace: "that"
+    word: true
+    propagate_case: true
+
+  - trigger: "taks"
+    replace: "task"
+    word: true
+    propagate_case: true
+
+  - trigger: "verose"
+    replace: "verbose"
+    word: true
+    propagate_case: true

@@ -1,0 +1,119 @@
+matches:
+  - triggers: ["będize", "bęzdie"]
+    replace: "będzie"
+    word: true
+    propagate_case: true
+
+  - trigger: "beiżący"
+    replace: "bieżący"
+    word: true
+    propagate_case: true
+
+  - triggers: ["jesli", "jesłi", "jeśłi"]
+    replace: "jeśli"
+    word: true
+    propagate_case: true
+
+  - trigger: "jeszze"
+    replace: "jeszcze"
+    word: true
+    propagate_case: true
+
+  - trigger: "jets"
+    replace: "jest"
+    word: true
+    propagate_case: true
+
+  - trigger: "kikla"
+    replace: "kilka"
+    word: true
+    propagate_case: true
+
+  - trigger: "linicah"
+    replace: "liniach"
+    word: true
+    propagate_case: true
+
+  - triggers: ["moze", "mozę", "możę"]
+    replace: "może"
+    word: true
+    propagate_case: true
+
+  - trigger: "pred"
+    replace: "przed"
+    word: true
+    propagate_case: true
+
+  - trigger: "rzaie"
+    replace: "razie"
+    word: true
+    propagate_case: true
+
+  - trigger: "sie"
+    replace: "się"
+    word: true
+    propagate_case: true
+
+  - trigger: "tylo"
+    replace: "tylko"
+    word: true
+    propagate_case: true
+
+  - trigger: "włąśnie"
+    replace: "właśnie"
+    word: true
+    propagate_case: true
+
+  - trigger: "wszytko"
+    replace: "wszystko"
+    word: true
+    propagate_case: true
+
+  - trigger: "zaimana"
+    replace: "zamiana"
+    word: true
+    propagate_case: true
+
+  - trigger: "zaisntalował"
+    replace: "zainstalował"
+    word: true
+    propagate_case: true
+
+  - trigger: "zamaist"
+    replace: "zamiast"
+    word: true
+    propagate_case: true
+
+  - trigger: "zasazdie"
+    replace: "zasadzie"
+    word: true
+    propagate_case: true
+
+  - trigger: "żę"
+    replace: "że"
+    word: true
+    propagate_case: true
+
+  - triggers: ["zeby", "żęby"]
+    replace: "żeby"
+    word: true
+    propagate_case: true
+
+  - trigger: "zmaina"
+    replace: "zmiana"
+    word: true
+    propagate_case: true
+
+  - trigger: "zmeiniła"
+    replace: "zmieniła"
+    word: true
+    propagate_case: true
+
+  - trigger: "szzc"
+    replace: "szcz"
+
+  - trigger: "szsy"
+    replace: "szys"
+
+  - trigger: "łądn"
+    replace: "ładn"

@@ -6,8 +6,7 @@
 
 IsReviewSource() {
     exe := WinGetProcessName("A")
-    return exe = "ChatGPT.exe"
-        || exe = "YourCorpMessenger.exe"
+    return exe = "KnoxTeams.exe"
         || exe = "SomeOtherApp.exe"
 }
 

@@ -1,6 +1,9 @@
-/auto.ahk
-/secrets.ahk
-/typo-log.txt
-/review.md
+/.idea/
+
 /AutoHotkey*.exe
 /AutoHotkey*.chm
+
+/review.md
+
+/windows/secrets.ahk
+/windows/auto.ahk

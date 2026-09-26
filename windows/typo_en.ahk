@@ -1,0 +1,13 @@
+::bracnh::branch
+::expalin::explain
+::froim::from
+::invloved::involved
+::metdata::metadata
+::retrive::retrieve
+::shold::should
+::szie::size
+::solutino::solution
+::starnge::strange
+::taht::that
+::taks::task
+::verose::verbose

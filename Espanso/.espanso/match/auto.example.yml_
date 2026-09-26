@@ -1,0 +1,4 @@
+# copy this file to `Espanso/.espanso/match/auto.yml` to let `Ctrl + Win + Backspace` maintain the Espanso dictionary
+# without `auto.yml`, captured corrections are not written in Espanso format
+
+matches:

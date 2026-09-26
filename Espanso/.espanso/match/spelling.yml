@@ -1,0 +1,30 @@
+matches:
+  - trigger: "comit"
+    replace: "commit"
+    word: true
+    propagate_case: true
+
+  - trigger: "commited"
+    replace: "committed"
+    word: true
+    propagate_case: true
+
+  - trigger: "uncommited"
+    replace: "uncommitted"
+    word: true
+    propagate_case: true
+
+  - trigger: "ammend"
+    replace: "amend"
+    word: true
+    propagate_case: true
+
+  - trigger: "ammended"
+    replace: "amended"
+    word: true
+    propagate_case: true
+
+  - trigger: "dc"
+    replace: "cd"
+    word: true
+    propagate_case: false

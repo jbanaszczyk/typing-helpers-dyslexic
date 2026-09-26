@@ -1,0 +1,14 @@
+*.exe
+*.dll
+*.cmd
+*.bat
+*.txt
+*.iss
+.files.txt.kate-swp
+
+.espanso-runtime/
+.espanso/config/
+.espanso/match/packages/
+
+.espanso/match/secrets.yml
+.espanso/match/auto.yml
