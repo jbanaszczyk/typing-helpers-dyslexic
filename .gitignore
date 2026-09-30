@@ -5,5 +5,14 @@
 
 /review.md
 
-/windows/secrets.ahk
-/windows/auto.ahk
+__pycache__/
+
+# windows/: whitelist, like Espanso/.gitignore — auto.ahk, secrets.ahk, local.ahk and your own files stay local
+# (a new shared file: add it here, or `git add -f` it once)
+/windows/*
+!/windows/scripts/
+!/windows/auto.ahk_
+!/windows/secrets.ahk_
+!/windows/spelling.ahk
+!/windows/typo_en.ahk
+!/windows/typo_pl.ahk

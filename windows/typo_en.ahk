@@ -1,4 +1,5 @@
 ::bracnh::branch
+:c:dc::cd
 ::expalin::explain
 ::froim::from
 ::invloved::involved

@@ -38,18 +38,19 @@ Everything runs locally — no cloud, no data leaves the machine.
 
 ## Platforms
 
-| Tool                                | Windows                   | Linux                                 |
-|-------------------------------------|---------------------------|---------------------------------------|
-| hotkeys (spaces, swaps, capture, …) | AutoHotkey                | scripts in `linux/` (not yet written) |
-| autocorrect                         | AutoHotkey **or** Espanso | Espanso                               |
+| Tool                                | Windows                   | Linux (Kubuntu, Plasma 6, Wayland) |
+|-------------------------------------|---------------------------|------------------------------------|
+| hotkeys (spaces, swaps, capture)    | AutoHotkey                | Python service in `linux/`         |
+| spellcheck roundtrip, debug hotkey  | AutoHotkey                | —                                  |
+| autocorrect                         | AutoHotkey **or** Espanso | Espanso                            |
 
 ### Windows: pick one autocorrect engine
 
 **AutoHotkey only** — no `Espanso/espansod.exe`
 
-- AutoHotkey handles hotkeys and autocorrect (`windows/auto.ahk`, `typo_*.ahk`, `spelling.ahk`, `secrets.ahk`)
-- captured typos go to `windows/auto.ahk` and also to `Espanso/.espanso/match/auto.yml`, ready to be reviewed into the
-  shared Espanso dictionaries
+- AutoHotkey handles hotkeys and autocorrect (`windows/`: `auto.ahk`, `typo_*.ahk`, `spelling.ahk`, `secrets.ahk`)
+- captured typos go to `windows/auto.ahk` and also to `Espanso/.espanso/match/auto.yml`, ready to be
+  reviewed into the shared Espanso dictionaries
 
 **AutoHotkey + Espanso** — portable Espanso in `Espanso/`
 
@@ -58,36 +59,45 @@ Everything runs locally — no cloud, no data leaves the machine.
 - captured typos go to `Espanso/.espanso/match/auto.yml` (and to `windows/auto.ahk`, if it exists)
 
 The switch is the existence of `Espanso/espansod.exe`, checked when AutoHotkey starts. Only one engine corrects at a
-time. Typo capture writes to each of `windows/auto.ahk`, `Espanso/.espanso/match/auto.yml` that exists — at least one
-is needed.
+time. Typo capture writes to each of `windows/auto.ahk`, `Espanso/.espanso/match/auto.yml` that
+exists — at least one is needed.
 
 ### Linux
 
 - Espanso handles autocorrect, using the same match files as Windows
-- hotkeys (spaces, swaps, capture) are not implemented yet
+- `linux/typing_helpers.py` (systemd user service) handles the hotkeys: space / transposition fixes and typo capture;
+  the Notepad roundtrip and the debug hotkey are Windows only
+- the hotkeys are KDE global shortcuts, component **Typing helpers** in
+  `System Settings → Keyboard → Shortcuts` — they can be changed there
+- keys are injected through a uinput virtual keyboard, the clipboard is used through `wl-copy` / `wl-paste`
+- an action runs after the hotkey modifiers are released (a virtual keyboard cannot release keys held on the physical
+  one)
+- while copying, the clipboard briefly holds `typing-helpers: waiting for copy`, then the previous content is
+  restored; Klipper history keeps these entries
+- how it works, why Python, debugging: [`linux/NOTES.md`](linux/NOTES.md)
 
 ---
 
 ## Setup
 
 On Windows, first decide which version you use — **AutoHotkey** or **AutoHotkey + Espanso** — and copy the matching
-example files. The version is switched by the presence of portable Espanso (`Espanso/espansod.exe`).
+template files (`*_`). The version is switched by the presence of portable Espanso (`Espanso/espansod.exe`).
 
-| Copy                                                                                 | Windows: AutoHotkey | Windows: AutoHotkey + Espanso | Linux (Espanso) |
-|--------------------------------------------------------------------------------------|---------------------|-------------------------------|-----------------|
-| `windows/auto.example.ahk` → `windows/auto.ahk`                                      | yes                 | optional                      |                 |
-| `Espanso/.espanso/match/auto.example.yml_` → `Espanso/.espanso/match/auto.yml`       | yes                 | yes                           | yes             |
-| `windows/secrets.example.ahk` → `windows/secrets.ahk`                                | yes                 |                               |                 |
-| `Espanso/.espanso/match/secrets.example.yml_` → `Espanso/.espanso/match/secrets.yml` |                     | yes                           | yes             |
+| Copy                                                                         | Windows: AutoHotkey | Windows: AutoHotkey + Espanso | Linux (Espanso) |
+|------------------------------------------------------------------------------|---------------------|-------------------------------|-----------------|
+| `windows/auto.ahk_` → `windows/auto.ahk`                                     | yes                 | optional                      |                 |
+| `Espanso/.espanso/match/auto.yml_` → `Espanso/.espanso/match/auto.yml`       | yes                 | yes                           | yes             |
+| `windows/secrets.ahk_` → `windows/secrets.ahk`                               | yes                 |                               |                 |
+| `Espanso/.espanso/match/secrets.yml_` → `Espanso/.espanso/match/secrets.yml` |                     | yes                           | yes             |
 
 ### Windows: AutoHotkey
 
 Portable AutoHotkey, no installation. After cloning the repository, download **AutoHotkey v2 (ZIP version)** from the
 official site and place `AutoHotkey64.exe` in the project root, beside `AutoHotkey.ahk`.
 
-- copy `windows/auto.example.ahk` → `windows/auto.ahk`
-- copy `Espanso/.espanso/match/auto.example.yml_` → `Espanso/.espanso/match/auto.yml`
-- copy `windows/secrets.example.ahk` → `windows/secrets.ahk` and fill in your private aliases
+- copy `windows/auto.ahk_` → `windows/auto.ahk`
+- copy `Espanso/.espanso/match/auto.yml_` → `Espanso/.espanso/match/auto.yml`
+- copy `windows/secrets.ahk_` → `windows/secrets.ahk` and fill in your private aliases
 - run AutoHotkey
 - add to autostart or similar
 
@@ -109,8 +119,8 @@ From that directory, run once **as administrator**:
 espanso service register
 ```
 
-- copy `Espanso/.espanso/match/auto.example.yml_` → `Espanso/.espanso/match/auto.yml`
-- copy `Espanso/.espanso/match/secrets.example.yml_` → `Espanso/.espanso/match/secrets.yml` and fill in your private
+- copy `Espanso/.espanso/match/auto.yml_` → `Espanso/.espanso/match/auto.yml`
+- copy `Espanso/.espanso/match/secrets.yml_` → `Espanso/.espanso/match/secrets.yml` and fill in your private
   aliases
 
 Then start `START_ESPANSO.bat`, also **as administrator**. The configuration lives in `Espanso/.espanso/config/` and
@@ -118,22 +128,59 @@ is gitignored.
 
 ### Linux (Espanso)
 
-- copy `Espanso/.espanso/match/auto.example.yml_` → `Espanso/.espanso/match/auto.yml`
-- copy `Espanso/.espanso/match/secrets.example.yml_` → `Espanso/.espanso/match/secrets.yml` and fill in your private
+- copy `Espanso/.espanso/match/auto.yml_` → `Espanso/.espanso/match/auto.yml`
+- copy `Espanso/.espanso/match/secrets.yml_` → `Espanso/.espanso/match/secrets.yml` and fill in your private
   aliases
 
-Keep the Linux configuration in `~/.config/espanso/config/` and point the match directory at the repository:
+Point Espanso's config directory (`~/.config/espanso`) at the repository:
 
 ```sh
-rm -rf ~/.config/espanso/match
-ln -s ~/repos/typing-helpers-dyslexic/Espanso/.espanso/match ~/.config/espanso/match
+linux/link_espanso.sh
 ```
 
+It replaces `~/.config/espanso` with a symlink to `Espanso/.espanso`; an existing directory is kept as
+`~/.config/espanso.bak-<date>` and its `config/` is copied over, if the repository has none yet (`config/` is per
+machine, gitignored).
+
 After `git pull`, Espanso sees the new rules directly.
+
+### Linux (hotkeys)
+
+Run once:
+
+```sh
+linux/install.sh
+```
+
+Run it as yourself, **not** with `sudo linux/install.sh` — it would then set things up for `root` instead of you (the
+script refuses to run as root). It asks for `sudo` itself and:
+
+- installs `python3-evdev`
+- makes `/dev/uinput` accessible to the `input` group (udev rule) and adds you to that group — note that any
+  program of yours can then read the keyboard
+- removes KWin's `Ctrl + Meta + Left / Right / Up / Down` (switch virtual desktop), taken by the hotkeys
+- enables the systemd user service `linux/typing-helpers.service` (starts with Plasma)
+
+`linux/uninstall.sh` reverts it (`python3-evdev` stays installed, KWin's desktop switching gets its default shortcuts
+back).
+
+Then log out and log in. Status and log:
+
+```sh
+systemctl --user status typing-helpers
+journalctl --user -u typing-helpers -f
+```
+
+After changing the scripts: `systemctl --user restart typing-helpers`.
+
+A hotkey acts only after you release `Ctrl` and `Meta` (AutoHotkey acts right away). That is how Wayland works —
+Espanso waits the same way. See `linux/NOTES.md`.
 
 ---
 
 ## Hotkeys
+
+`Win` is `Meta` on Linux.
 
 ### Space / transposition fixes (core)
 
@@ -208,7 +255,7 @@ committed and pushed (see [Review](#review)).
 | `typo_en.yml`                       | `typo_en.ahk`           | reviewed English typos                        |
 | `spelling.yml`                      | `spelling.ahk`          | words I repeatedly misspell                   |
 | `secrets.yml`                       | `secrets.ahk`           | private aliases / data (gitignored)           |
-| `base.yml`                          |                         | Espanso base file, safe to delete             |
+| any other `*.yml`                   | `local.ahk`             | your own rules (gitignored)                   |
 
 Examples:
 
@@ -228,6 +275,16 @@ The Espanso and AutoHotkey files do not have to be identical. Each uses its own 
 | `word: true`, no case propagation    | `:c:dc::cd`                                   |
 | no `word` (fragment inside a word)   | `:?c*:szzc::szcz`                             |
 | `triggers: [a, b]`                   | one hotstring per trigger                     |
+
+### Own dictionaries
+
+Only the files listed in `Espanso/.gitignore` and `.gitignore` are shared; everything else in `Espanso/` and `windows/`
+stays local. A new file is ignored until you add it to the list (or `git add -f` it once), so nothing private is
+committed by accident.
+
+- Espanso loads every `*.yml` in `Espanso/.espanso/match/` — just add a file.
+- AutoHotkey loads only included files: put your hotstrings into `windows/local.ahk` (included if it exists, like
+  `secrets.ahk`), which may `#Include` further files. Like the other dictionaries, it is active only without Espanso.
 
 ### Review
 
@@ -355,35 +412,47 @@ push, pull on the other machine — it works there too.
 AutoHotkey.ahk            – main AHK script (entrypoint), next to AutoHotkey64.exe
 AutoHotkey64.exe          – AHK v2 binary (from downloaded ZIP, gitignored)
 windows/
-  auto.ahk                – captured typos (copy of auto.example.ahk, gitignored)
+  auto.ahk                – captured typos (copy of auto.ahk_, gitignored)
   typo_pl.ahk             – reviewed Polish typos
   typo_en.ahk             – reviewed English typos
   spelling.ahk            – repeated misspellings
-  sequence_fixes.ahk      – space / transposition fixes
-  make_dictionary.ahk     – typo capture
-  messenger.ahk           – Notepad spellcheck roundtrip
-  secrets.ahk             – private aliases / data (gitignored)
-linux/                    – Linux hotkey scripts (planned)
+  secrets.ahk             – private aliases / data (copy of secrets.ahk_, gitignored)
+  local.ahk               – your own hotstrings (optional, gitignored)
+  scripts/
+    sequence_fixes.ahk    – space / transposition fixes
+    make_dictionary.ahk   – typo capture
+    messenger.ahk         – Notepad spellcheck roundtrip
+linux/
+  typing_helpers.py       – Linux hotkey service (entrypoint), KDE global shortcuts
+  keyboard.py             – key injection (uinput), keyboard reading (evdev), clipboard (wl-clipboard)
+  sequence_fixes.py       – space / transposition fixes
+  make_dictionary.py      – typo capture
+  typing-helpers.service  – systemd user unit
+  install.sh              – one-time setup
+  uninstall.sh            – reverts install.sh
+  link_espanso.sh         – links ~/.config/espanso to Espanso/.espanso
+  NOTES.md                – how the Linux service works, debugging
 Espanso/                  – portable Espanso on Windows (binaries gitignored)
   espansod.exe            – its presence switches autocorrect from AutoHotkey to Espanso
   .espanso/match/
-    base.yml              – Espanso base file
-    auto.yml              – captured typos (copy of auto.example.yml_, gitignored)
+    auto.yml              – captured typos (copy of auto.yml_, gitignored)
     typo_pl.yml           – reviewed Polish typos
     typo_en.yml           – reviewed English typos
     spelling.yml          – repeated misspellings
-    secrets.yml           – private aliases / data (gitignored)
+    secrets.yml           – private aliases / data (copy of secrets.yml_, gitignored)
+    *.yml                 – your own rules (gitignored)
 ```
 
 ---
 
 ## Notes
 
-- the autocorrect engine is switched by `Espanso/espansod.exe`, which example files to copy depends on the version,
+- the autocorrect engine is switched by `Espanso/espansod.exe`, which template files to copy depends on the version,
   see [Setup](#setup)
-- `messenger.ahk`
+- `windows/scripts/messenger.ahk`
   → add target apps to `IsReviewSource()`
-- Espanso configuration (`config/`) is per machine and gitignored; only match files are shared
+- Espanso configuration (`config/`) is per machine and gitignored; only the listed match files are shared (see
+  [Own dictionaries](#own-dictionaries))
 - temp files:
     - `review.md`
 - fully offline (no text leaves your machine)

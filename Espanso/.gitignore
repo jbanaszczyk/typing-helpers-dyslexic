@@ -1,14 +1,15 @@
-*.exe
-*.dll
-*.cmd
-*.bat
-*.txt
-*.iss
-.files.txt.kate-swp
+# whitelist: only the listed files are shared, everything else stays local —
+# portable Espanso binaries, config/ (per machine), packages/, auto.yml, secrets.yml and your own *.yml
+# (a new shared file: add it here, or `git add -f` it once)
+/*
+!/.gitignore
+!/.espanso/
+/.espanso/*
+!/.espanso/match/
+/.espanso/match/*
 
-.espanso-runtime/
-.espanso/config/
-.espanso/match/packages/
-
-.espanso/match/secrets.yml
-.espanso/match/auto.yml
+!/.espanso/match/auto.yml_
+!/.espanso/match/secrets.yml_
+!/.espanso/match/spelling.yml
+!/.espanso/match/typo_en.yml
+!/.espanso/match/typo_pl.yml

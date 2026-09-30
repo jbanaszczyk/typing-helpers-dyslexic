@@ -1,0 +1,12 @@
+[Unit]
+Description=Typing helpers (space / transposition fixes, typo capture)
+PartOf=graphical-session.target
+After=plasma-workspace.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u %h/repos/typing-helpers-dyslexic/linux/typing_helpers.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=plasma-workspace.target

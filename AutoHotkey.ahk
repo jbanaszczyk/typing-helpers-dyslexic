@@ -11,8 +11,9 @@ ahkTypos := !FileExist(A_ScriptDir "/Espanso/espansod.exe")
 #Include "windows/typo_en.ahk"
 #Include "windows/spelling.ahk"
 #Include "*i windows/secrets.ahk"
+#Include "*i windows/local.ahk"   ; your own hotstrings, outside the repo
 #HotIf
 
-#Include "windows/sequence_fixes.ahk"
-#Include "windows/make_dictionary.ahk"
-#Include "windows/messenger.ahk"
+#Include "windows/scripts/sequence_fixes.ahk"
+#Include "windows/scripts/make_dictionary.ahk"
+#Include "windows/scripts/messenger.ahk"
