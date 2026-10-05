@@ -44,5 +44,5 @@ ACTIONS = {
     # action: (label in KDE System Settings, default keys, function)
     "early-space": ("Fix early space (pojedyncz alitera)", ["ctrl+meta+right"], fix_early_space),
     "late-space": ("Fix late space (pojedynczal itera)", ["ctrl+meta+left"], fix_late_space),
-    "swap": ("Swap characters around cursor", ["ctrl+meta+up", "ctrl+meta+down"], swap_chars_around_cursor),
+    "swap": ("Swap characters around cursor", ["ctrl+meta+up"], swap_chars_around_cursor),
 }

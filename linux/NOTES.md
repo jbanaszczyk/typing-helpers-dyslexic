@@ -60,6 +60,7 @@ What Python gives:
 | `keyboard.py`            | uinput output (`send`), evdev input (listeners, held keys), clipboard helpers           | built into AHK        |
 | `sequence_fixes.py`      | space / transposition fixes                                                             | `sequence_fixes.ahk`  |
 | `make_dictionary.py`     | typo capture                                                                            | `make_dictionary.ahk` |
+| `espanso_restart.py`     | Espanso restart on keyboard plug-in and hotkey (it stops responding after a reconnect)  | `AutoHotkey.ahk`      |
 | `typing-helpers.service` | systemd user unit — starts the service with Plasma, restarts it on crash                | autostart             |
 | `install.sh`             | one-time setup                                                                          | —                     |
 

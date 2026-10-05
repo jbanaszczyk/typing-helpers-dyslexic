@@ -17,3 +17,11 @@ ahkTypos := !FileExist(A_ScriptDir "/Espanso/espansod.exe")
 #Include "windows/scripts/sequence_fixes.ahk"
 #Include "windows/scripts/make_dictionary.ahk"
 #Include "windows/scripts/messenger.ahk"
+
+; Espanso stops responding after the keyboard reconnects (KVM switch)
+^#Down::{
+    espanso := A_ScriptDir "\Espanso\espansod.exe"
+    if FileExist(espanso) {
+        Run '"' espanso '" restart', A_ScriptDir "\Espanso", "Hide"
+    }
+}

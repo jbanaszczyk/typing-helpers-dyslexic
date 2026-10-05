@@ -2,7 +2,7 @@
 """Typing helpers for KDE Plasma (Wayland), Linux counterpart of `AutoHotkey.ahk`.
 
 Hotkeys are KDE global shortcuts (component "Typing helpers" in System Settings → Keyboard → Shortcuts),
-registered over DBus at start. Autocorrect is left to Espanso.
+registered over DBus at start. Autocorrect is left to Espanso, restarted when a keyboard is plugged in and by `Ctrl + Meta + Down`.
 """
 
 import signal
@@ -13,6 +13,7 @@ import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
+import espanso_restart
 import make_dictionary
 import sequence_fixes
 from keyboard import Keyboard
@@ -22,6 +23,7 @@ COMPONENT_NAME = "Typing helpers"
 
 # kglobalaccel `SetShortcutFlag`
 SET_PRESENT = 2
+NO_AUTOLOADING = 4
 IS_DEFAULT = 8
 
 # Qt key codes, as kglobalaccel expects them over DBus
@@ -29,7 +31,8 @@ QT_MODIFIERS = {"ctrl": 0x04000000, "shift": 0x02000000, "alt": 0x08000000, "met
 QT_KEYS = {"left": 0x01000012, "up": 0x01000013, "right": 0x01000014, "down": 0x01000015,
            "backspace": 0x01000003}
 
-ACTIONS = {**sequence_fixes.ACTIONS, **make_dictionary.ACTIONS}
+# swap before espanso-restart: an older swap default held Ctrl+Meta+Down
+ACTIONS = {**sequence_fixes.ACTIONS, **make_dictionary.ACTIONS, **espanso_restart.ACTIONS}
 
 
 def qt_key(combo):
@@ -51,6 +54,7 @@ class TypingHelpers:
     def __init__(self):
         self.keyboard = Keyboard()
         self.keyboard.listeners.append(lambda code, value: make_dictionary.on_key(self.keyboard, code, value))
+        self.keyboard.plug_listeners.append(lambda: espanso_restart.on_keyboard_plugged(self.keyboard))
         if not self.keyboard.devices:
             print("no keyboard readable in /dev/input - is the user in the `input` group?", file=sys.stderr)
 
@@ -60,9 +64,11 @@ class TypingHelpers:
         for action, (label, combos, _function) in ACTIONS.items():
             action_id = self.action_id(action, label)
             self.kglobalaccel.doRegister(action_id)
+            # keys changed in System Settings are kept; keys still at the old default follow a changed default
+            customized = self.kglobalaccel.shortcutKeys(action_id) != self.kglobalaccel.defaultShortcutKeys(action_id)
             self.kglobalaccel.setShortcutKeys(action_id, qt_shortcuts(combos), dbus.UInt32(IS_DEFAULT))
-            # keys changed in System Settings are kept, the defaults only apply to a new action
-            active = self.kglobalaccel.setShortcutKeys(action_id, qt_shortcuts(combos), dbus.UInt32(SET_PRESENT))
+            flags = SET_PRESENT if customized else SET_PRESENT | NO_AUTOLOADING
+            active = self.kglobalaccel.setShortcutKeys(action_id, qt_shortcuts(combos), dbus.UInt32(flags))
             if len(active) < len(combos):
                 print(f"{action}: some of {combos} not assigned, taken by another shortcut?", file=sys.stderr)
 

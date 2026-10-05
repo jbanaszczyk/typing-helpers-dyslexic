@@ -5,6 +5,7 @@
 - the clipboard is handled by wl-clipboard (KWin supports the data-control protocol)
 """
 
+import os
 import subprocess
 import time
 
@@ -33,6 +34,11 @@ KEY_ALIASES = {
 CLIPBOARD_SENTINEL = "typing-helpers: waiting for copy"
 
 
+def is_virtual(path):
+    """uinput devices (typing-helpers, Espanso's injector) live in /sys/devices/virtual, plugged-in ones do not"""
+    return "/virtual/" in os.path.realpath("/sys/class/input/" + os.path.basename(path))
+
+
 def parse_combo(combo):
     """"ctrl+shift+left" -> [KEY_LEFTCTRL, KEY_LEFTSHIFT, KEY_LEFT]"""
     return [KEY_ALIASES.get(name) or ecodes.ecodes["KEY_" + name.upper()] for name in combo.split("+")]
@@ -43,12 +49,15 @@ class Keyboard:
         self.output = evdev.UInput(name=NAME)
         self.devices = {}  # path -> evdev.InputDevice
         self.listeners = []  # callables (key code, value), value: 1 press, 0 release, 2 autorepeat
+        self.plug_listeners = []  # callables (), a physical keyboard plugged in after start
+        self.scanned = False
         self.scan()
-        GLib.timeout_add_seconds(3, self.scan)  # keyboards plugged in later
+        GLib.timeout_add_seconds(5, self.scan)  # keyboards plugged in later
 
     # ---------- input
 
     def scan(self):
+        plugged = False
         for path in evdev.list_devices():
             if path in self.devices:
                 continue
@@ -63,6 +72,11 @@ class Keyboard:
             self.devices[path] = device
             conditions = GLib.IO_IN | GLib.IO_ERR | GLib.IO_HUP | GLib.IO_NVAL
             GLib.io_add_watch(device.fd, GLib.PRIORITY_DEFAULT, conditions, self.on_input, path)
+            plugged = plugged or not is_virtual(path)
+        if plugged and self.scanned:
+            for listener in self.plug_listeners:
+                listener()
+        self.scanned = True
         return True
 
     def drop(self, path):

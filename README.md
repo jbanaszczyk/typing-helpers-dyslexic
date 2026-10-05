@@ -188,7 +188,20 @@ Espanso waits the same way. See `linux/NOTES.md`.
 |--------------------------|-------------------------------------------------------------|--------------------------|
 | `Ctrl + Win + Left`      | fix "late space" (`pojedynczal itera → pojedyncza litera`)  | move space left          |
 | `Ctrl + Win + Right`     | fix "early space" (`pojedyncz alitera → pojedyncza litera`) | move space right         |
-| `Ctrl + Win + Up / Down` | swap characters around cursor (`1a\|b4 → 1b\|a4`)           | fix transposition errors |
+| `Ctrl + Win + Up`        | swap characters around cursor (`1a\|b4 → 1b\|a4`)           | fix transposition errors |
+
+---
+
+### Espanso restart
+
+| Hotkey              | Description     |
+|---------------------|-----------------|
+| `Ctrl + Win + Down` | restart Espanso |
+
+Espanso stops responding after the keyboard disconnects and reconnects (e.g. a KVM switch), its log shows
+`Can't read from device /dev/input/event…`. On Linux the service restarts Espanso on its own, up to 7 s after a keyboard
+is plugged in; the hotkey is the fallback. On Windows the hotkey exists only with portable Espanso
+(`Espanso/espansod.exe`).
 
 ---
 

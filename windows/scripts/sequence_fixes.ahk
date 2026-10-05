@@ -37,6 +37,5 @@ SwapCharsAroundCursor() {
 ^#Right::FixEarlySpace()
 ^#Left::FixLateSpace()
 ^#Up::SwapCharsAroundCursor()
-^#Down::SwapCharsAroundCursor()
 
 ;;;;;;;;;;;;;;
